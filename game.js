@@ -1,9 +1,16 @@
 
 
-//Variabler för rörliga objekt
+//Canvas1
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
+
+
+//Canvas2
+var Canvas2 = document.getElementById("myCanvas2");
+var ctx2 = canvas.getContext("2d");
 var imageBack = new Image();
+var xb = Canvas2.width;
+var yb = Canvas2.height;
 
 //Variabler för ballong
 var x = canvas.width/9;
@@ -18,10 +25,9 @@ var dy = -2;
 //Ritar bakgrund. HAMNAR OVANFÖR BALLONGJÄVELN
 	imageBack.onload = function()
 	{
-		ctx.drawImage(imageBack, 69, 50);
+		ctx2.drawImage(imageBack, 0, 0, 1920, 720);
 	};
-//	imageBack.src = 'https://www.html5canvastutorials.com/demos/assets/darth-vader.jpg';
-	
+  imageBack.src = 'cute.gif';
 
 
 
@@ -38,15 +44,22 @@ function flyingballoon() {
 
 //Uppdaterar bilden. 
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx2.clearRect(0, 0, canvas.width, canvas.height);
+	imageBack.onload();
     flyingballoon();
-	
+
 	if(y +dy > canvas.height-180  || y + dy < 1) {
         dy = -dy;
     }
  
  //Ska kopplas till hur ljudet kommer in. 
    y += dy;
+   
+   
+   
+
 }
 //Intervall i hur ofta bilden ska uppdateras. 
 setInterval(draw, 10);
