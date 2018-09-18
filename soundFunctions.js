@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 var audioInput;
+=======
+var promise;
+>>>>>>> origin/master
 
 function printHej() {
     window.alert("Hej");
@@ -6,12 +10,17 @@ function printHej() {
 
 function startAudio() {
     try {
+<<<<<<< HEAD
         audioInput = navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+=======
+        promise = navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+>>>>>>> origin/master
     } catch (err) {
         window.alert("Det gick inte hitta ljudkällan.");
     }   
 }
 function stopAudio() {
+<<<<<<< HEAD
     
 }
 function isActiveAudio() {
@@ -33,5 +42,7 @@ function nobody() {
     var bufferLength = analyser.frequencyBinCount;
     var dataArray = new Uint8Array(bufferLength);
     analyser.getByteTimeDomainData(dataArray);
+=======
+>>>>>>> origin/master
     
 }
