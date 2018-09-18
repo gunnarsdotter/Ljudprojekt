@@ -15,7 +15,8 @@ function stopAudio() {
     
 }
 function isActiveAudio() {
-    window.alert(audioInput.active());
+    if(audioInput.active){ window.alert("yes");}
+    else {window.alert("No");}
 }
 
 function nobody() {
@@ -24,4 +25,13 @@ function nobody() {
     //create effects nodes
     //Finle destenatin
     //connect soours up to effects and the effekt to destination
+    
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    var audioCtx = new AudioContext();
+    var analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 2048;
+    var bufferLength = analyser.frequencyBinCount;
+    var dataArray = new Uint8Array(bufferLength);
+    analyser.getByteTimeDomainData(dataArray);
+    
 }
