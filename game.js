@@ -33,18 +33,13 @@ var dy = -2;
 
 //Ritar bilden. 
 function flyingballoon() {
-	
-
 	ctx.beginPath();
 	ctx.drawImage(imageballoon, x, y, 140, 200);
     ctx.closePath();
-
-
 }
 
 //Uppdaterar bilden. 
 function draw() {
-
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx2.clearRect(0, 0, canvas.width, canvas.height);
 	imageBack.onload();
@@ -55,11 +50,9 @@ function draw() {
     }
  
  //Ska kopplas till hur ljudet kommer in. 
-   y += dy;
+   y += dy; 
    
    
-   
-
 }
 //Intervall i hur ofta bilden ska uppdateras. 
-setInterval(draw, 10);
+//setInterval(draw, 10);
