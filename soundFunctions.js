@@ -99,10 +99,10 @@ function gotStream(stream) {
     dataArray = new Float32Array(analyser.frequencyBinCount);
 
     // Create a new volume meter and connect it.
-    value = createAudioValue(audioContext);
+    //value = createAudioValue(audioContext);
     
     //Set up audio node network
-    mediaStreamSource.connect(value);
+    mediaStreamSource.connect(analyser);
     //analyser.connect(audioContext.destination);
     
     
@@ -121,13 +121,21 @@ function draw( time ) {
     }
  
     //Ska kopplas till hur ljudet kommer in. 
-    y = value.volume*500; 
+    y += dy; 
 
     // check if we're currently clipping
     //if (meter.checkClipping())
       //  canvasContext.fillStyle = "red";
     //else
       //  canvasContext.fillStyle = "green";
+    //TAbort?
+    test.innerHTML = "Start: " + maximum;
+    maximum = 0;
+    analyser.getFloatFrequencyData(dataArray);
+    dataArray.forEach(function(element){
+        if(Math.abs(element) > maximum)
+        {maximum = Math.abs(element)}
+        test.innerHTML += Math.round(Math.abs(element))+ ", ";});
     
     // draw a bar based on the current volume
     //canvasContext.fillRect(0, 0, meter.volume*WIDTH*1.4, HEIGHT);
@@ -137,10 +145,10 @@ function draw( time ) {
 }
 
 
-//-----------------------TABORT UNDER???--------------------------//
+//------------------------TABORT UNDER???--------------------------//
 function createAudioValue(audioContext,clipLevel,averaging,clipLag) {
 	var processor = audioContext.createScriptProcessor(512);
-    processor.onaudioprocess = volumeAudioProcess;
+    processor.onaudioprocess = valueAudioProcess;
 	processor.clipping = false;
 	processor.lastClip = 0;
 	processor.volume = 0;
@@ -151,6 +159,7 @@ function createAudioValue(audioContext,clipLevel,averaging,clipLag) {
 	// this will have no effect, since we don't copy the input to the output,
 	// but works around a current Chrome bug.
 	processor.connect(audioContext.destination);
+    
     try{
 	processor.checkClipping =
 		function(){
