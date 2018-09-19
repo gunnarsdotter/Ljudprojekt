@@ -10,6 +10,8 @@ var value = null;
 var analyser = null;
 var test;
 var maximum = 0;
+var fvalue;
+var i;
 
 //Canvas1
 var canvas = document.getElementById("myCanvas");
@@ -56,7 +58,7 @@ function startAudio() {
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
 	
     // grab an audio context
-    audioContext = new AudioContext();
+    audioContext = new AudioContext({sampleRate: 44100});
     
     // Attempt to get audio input
     try {
@@ -96,11 +98,13 @@ function gotStream(stream) {
     
     analyser = audioContext.createAnalyser();
     analyser.fftSize = 1024;
-    dataArray = new Float32Array(analyser.frequencyBinCount);
-
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    frequencyArray = new Float32Array(analyser.frequencyBinCount);
     // Create a new volume meter and connect it.
-    //value = createAudioValue(audioContext);
-    
+    //value createAudioValue(audioContext);
+    for(var i=0; i <= frequencyArray.length; i++){
+        frequencyArray[i] = i*44100.0/1024;
+    }
     //Set up audio node network
     mediaStreamSource.connect(analyser);
     //analyser.connect(audioContext.destination);
@@ -129,13 +133,18 @@ function draw( time ) {
     //else
       //  canvasContext.fillStyle = "green";
     //TAbort?
-    test.innerHTML = "Start: " + maximum;
-    maximum = 0;
-    analyser.getFloatFrequencyData(dataArray);
+    
+    
+    analyser.getByteFrequencyData(dataArray);
+    fvalue = Math.max.apply( this, dataArray );
+    if(fvalue == -Infinity){ fvalue = 0;}
+    i = dataArray.findIndex(function (element){
+        return element == fvalue;
+    }
+                           );
+    test.innerHTML = "Start: " + fvalue +" something"+ i;
     dataArray.forEach(function(element){
-        if(Math.abs(element) > maximum)
-        {maximum = Math.abs(element)}
-        test.innerHTML += Math.round(Math.abs(element))+ ", ";});
+       test.innerHTML += Math.round(element)+ ", ";});
     
     // draw a bar based on the current volume
     //canvasContext.fillRect(0, 0, meter.volume*WIDTH*1.4, HEIGHT);
