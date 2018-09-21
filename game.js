@@ -1,5 +1,4 @@
 
-
 //Canvas1
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
@@ -21,6 +20,7 @@ imageballoon.src = "balloon.png";
 //Variabel som ska vara beroende av ljudet. 
 var dx = 2;
 var dy = -2;
+var rafID = null;
 
 //Ritar bakgrund. HAMNAR OVANFÖR BALLONGJÄVELN
 	imageBack.onload = function()
@@ -44,15 +44,18 @@ function draw() {
 	ctx2.clearRect(0, 0, canvas.width, canvas.height);
 	imageBack.onload();
     flyingballoon();
-
+    
 	if(y +dy > canvas.height-180  || y + dy < 1) {
         dy = -dy;
     }
  
- //Ska kopplas till hur ljudet kommer in. 
-   y += dy; 
+    //Ska kopplas till hur ljudet kommer in. 
+    y = getFrequency()/5; 
    
    
+    // set up the next visual callback
+    rafID = window.requestAnimationFrame( draw );
 }
+
 //Intervall i hur ofta bilden ska uppdateras. 
 //setInterval(draw, 10);
