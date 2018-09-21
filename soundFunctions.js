@@ -1,3 +1,4 @@
+
 //ljudvariabler
 var audioContext = null;
 var meter = null; //behövs
@@ -12,6 +13,7 @@ var test;
 var maximum = 0;
 var fvalue;
 var i;
+var oldvalue;
 
 //Canvas1
 var canvas = document.getElementById("myCanvas");
@@ -118,15 +120,37 @@ function draw( time ) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx2.clearRect(0, 0, canvas.width, canvas.height);
 	imageBack.onload();
-    flyingballoon();
-
-	if(y +dy > canvas.height-180  || y + dy < 1) {
+    
+    
+    analyser.getByteFrequencyData(dataArray);
+    fvalue = Math.max.apply( this, dataArray );
+    if(fvalue == -Infinity){ }
+    else if(fvalue < 100){}
+    else{
+        i = dataArray.findIndex(function (element){
+            return element == fvalue;
+        });}
+    
+    test.innerHTML = "Start: " + fvalue +" something"+ i+ "Frequency"+ frequencyArray[i]+ " japp de var allt";
+    /*frequencyArray.forEach(function(element){
+       test.innerHTML += Math.round(element)+ ", ";});*/
+    /*
+    if (frequencyArray[i] >200 && frequencyArray[i] < 400){y = }
+    else if(frequencyArray[i] >400 && frequencyArray[i] < 600){y = }
+    else if(frequencyArray[i] >600 && frequencyArray[i] < 800) {y =}
+    else if(frequencyArray[i] >800 && frequencyArray[i] < 1000){y = }
+    else if(frequencyArray[i] >1000 && frequencyArray[i] < 1200) {y =}
+    else if(frequencyArray[i] >1200 && frequencyArray[i] < 1500) {y =}
+    else if(frequencyArray[i] > 15000){y = }
+    else if(frequencyArray[i] < 200) {y = }*/
+                                       
+    //Ska kopplas till hur ljudet kommer in. 
+    y = frequencyArray[i]/2; 
+    
+    if(y +dy > canvas.height-180  || y + dy < 1) {
         dy = -dy;
     }
- 
-    //Ska kopplas till hur ljudet kommer in. 
-    y += dy; 
-
+    flyingballoon();
     // check if we're currently clipping
     //if (meter.checkClipping())
       //  canvasContext.fillStyle = "red";
@@ -135,16 +159,6 @@ function draw( time ) {
     //TAbort?
     
     
-    analyser.getByteFrequencyData(dataArray);
-    fvalue = Math.max.apply( this, dataArray );
-    if(fvalue == -Infinity){ fvalue = 0;}
-    i = dataArray.findIndex(function (element){
-        return element == fvalue;
-    }
-                           );
-    test.innerHTML = "Start: " + fvalue +" something"+ i;
-    dataArray.forEach(function(element){
-       test.innerHTML += Math.round(element)+ ", ";});
     
     // draw a bar based on the current volume
     //canvasContext.fillRect(0, 0, meter.volume*WIDTH*1.4, HEIGHT);
