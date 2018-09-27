@@ -9,9 +9,16 @@ var frequencyArray = null;
 var size = 1024;
 var sampelrate = 44100;
 var test; //tabort
+var soundActive = false;
+
+//Knappar 
+var startButtom;
+var endButtom;
 
 function startGame() {
     test = document.getElementById( "test" );
+    startButtom = document.getElementById( "startbuttom" );
+    endButtom = document.getElementById( "endbuttom" );
 }
 
 function startAudio() {	
@@ -62,6 +69,7 @@ function createFrequencyAnalyser(){
     }
 }
 function streamFind(stream) {
+    soundActive = true;
     startGame();
     // Create an AudioNode from the stream.
     mediaStreamSource = audioContext.createMediaStreamSource(stream);
@@ -71,6 +79,9 @@ function streamFind(stream) {
     mediaStreamSource.connect(analyser);
     //analyser.connect(audioContext.destination); //if this is active then the sound will go to the speakers.
     
+    startButtom.style.visibility="hidden";
+    endButtom.style.visibility="visible";
+    
     // kick off the visual updating
     draw();
 }
@@ -79,11 +90,27 @@ function getFrequency(){
     analyser.getByteFrequencyData(dataArray);
     fvalue = Math.max.apply( this, dataArray );
     //TODO skriv om
-    if((fvalue != -Infinity) || (fvalue > 100)){
+    if((fvalue != -Infinity) && (fvalue > 200)){
         i = dataArray.findIndex(function (element){
             return element == fvalue;
         });}    
+    test.innerHTML = "Start: " + fvalue +" something"+ i+ "Frequency"+ frequencyArray[i]+ " japp de var allt";
+     frequencyArray.forEach(function(element){
+       test.innerHTML += Math.round(element)+ ", ";});
     return frequencyArray[i];
+}
+//
+function stopAudio(){
+    endButtom.style.visibility="hidden";
+    startButtom.style.visibility="visible";
+    soundActive = false;
+    
+    try{
+        audioContext.close();
+    }catch (e ){
+        alert('Ljudkällan är inte äns på!!!');
+    }
+    
 }
 /*
 function draw( time ) {

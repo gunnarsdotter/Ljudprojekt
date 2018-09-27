@@ -48,11 +48,12 @@ function draw() {
 	if(y +dy > canvas.height-180  || y + dy < 1) {
         dy = -dy;
     }
- 
+    
     //Ska kopplas till hur ljudet kommer in. 
-    y = getFrequency()/5; 
-   
-   
+    if(soundActive){
+        y = getFrequency()/5; 
+    }
+    
     // set up the next visual callback
     rafID = window.requestAnimationFrame( draw );
 }
