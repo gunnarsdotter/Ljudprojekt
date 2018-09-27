@@ -15,8 +15,10 @@
 		</style>
     </head>
     <body>
-        <button id ="startbuttom" onclick="startAudio()"> start audio! </button>
-        <button id ="endbuttom" onclick="stopAudio()"> end audio! </button>
+        <button  onclick="vanlig()"> starta</button>
+        <button  onclick="autokorrelation()"> Autokorrelation </button>
+        <button  onclick="HPS()"> HPS </button>
+        <button  onclick="cepstrum()">cepstrum</button>
         <p id="test" > hej </p>
 		<canvas id="myCanvas" width="1920" height="720"  style = "position: absolute; z-index: 1 "></canvas>
 		<canvas id="myCanvas2" width="1920" height="720" style = "position: absolute; z-index: 0 "></canvas>

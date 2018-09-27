@@ -1,26 +1,26 @@
-//ljudvariabler
+//ljudnoder
 var audioContext = null;
 var mediaStreamSource = null;
 var analyser = null;
-var fvalue = 0;
-var i= 0;
+//arrayer
 var dataArray =null;
 var frequencyArray = null;
+//ljudvariabler
+var fvalue = 0;
+var i= 0;
 var size = 1024;
 var sampelrate = 44100;
-var test; //tabort
+var threshold = 200;
 var soundActive = false;
+var fchoice = vanlig;
 
-//Knappar 
-var startButtom;
-var endButtom;
-
+var test; //TABORT
+//TABORT!!
 function startGame() {
     test = document.getElementById( "test" );
-    startButtom = document.getElementById( "startbuttom" );
-    endButtom = document.getElementById( "endbuttom" );
 }
 
+//Försöker starta ljudet
 function startAudio() {	
     // monkeypatch Web Audio
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -54,20 +54,12 @@ function startAudio() {
     }
 }
 
+//Görs om man inte har hittat en ljudkälla
 function streamNotFind() {
     alert('Det gick inte att hitta en ljudkälla.');
 }
-function createFrequencyAnalyser(){
-    analyser = audioContext.createAnalyser();
-    analyser.fftSize = 1024;
-    //create arrays
-    dataArray = new Uint8Array(analyser.frequencyBinCount);
-    frequencyArray = new Float32Array(analyser.frequencyBinCount);
-    //Create a array with the frequencyintervallt
-    for(var i=0; i <= frequencyArray.length; i++){
-        frequencyArray[i] = i*sampelrate/size;
-    }
-}
+
+//Görs om man har hittat en ljudkälla
 function streamFind(stream) {
     soundActive = true;
     startGame();
@@ -79,18 +71,35 @@ function streamFind(stream) {
     mediaStreamSource.connect(analyser);
     //analyser.connect(audioContext.destination); //if this is active then the sound will go to the speakers.
     
-    startButtom.style.visibility="hidden";
-    endButtom.style.visibility="visible";
-    
     // kick off the visual updating
     draw();
 }
 
+//Skapar en analys node så man kan få fram frekvenserna
+function createFrequencyAnalyser(){
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 1024;
+    //create arrays
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    frequencyArray = new Float32Array(analyser.frequencyBinCount);
+    //Create a array with the frequencyintervallt
+    for(var i=0; i <= frequencyArray.length; i++){
+        frequencyArray[i] = i*sampelrate/size;
+    }
+}
+
 function getFrequency(){
+    if(fchoice==vanlig) return getFrequencyVanligt();
+    else if (fchoice == autokorrelation) return getFrequencyAuto();
+    else if (fchoice == HPS) return getFrequencyHPS();
+    else if (fchoice == cepstrum) return getFrequencyCepstrum();
+}
+//Hämtar frekvensen genom att hitta det starkasteintevallet
+function getFrequencyVanligt(){
     analyser.getByteFrequencyData(dataArray);
     fvalue = Math.max.apply( this, dataArray );
     //TODO skriv om
-    if((fvalue != -Infinity) && (fvalue > 200)){
+    if((fvalue != -Infinity) && (fvalue > threshold)){
         i = dataArray.findIndex(function (element){
             return element == fvalue;
         });}    
@@ -99,20 +108,37 @@ function getFrequency(){
        test.innerHTML += Math.round(element)+ ", ";});
     return frequencyArray[i];
 }
-//
+function getFrequencyCepstrum(){getFrequencyVanligt();}
+function getFrequencyHPS(){getFrequencyVanligt();}
+function getFrequencyAuto(){getFrequencyVanligt();}
+
+//Stänger av ljudkällan
 function stopAudio(){
-    endButtom.style.visibility="hidden";
-    startButtom.style.visibility="visible";
     soundActive = false;
-    
     try{
         audioContext.close();
-    }catch (e ){
+    }catch (e){
         alert('Ljudkällan är inte äns på!!!');
-    }
-    
+    }  
 }
-/*
+
+//Functioner beroende på hur man vill hämta frekvensen
+function vanlig(){
+    fchoice = vanlig;
+    startAudio();
+}
+function autokorrelation(){ fchoice = autokorrelation;
+    alert("Jag fungerar inte än! Du får köra vanlig");
+}
+function HPS(){ fchoice =HPS;
+    alert("Jag fungerar inte än! Du får köra vanlig");
+}
+function cepstrum(){ fchoice = cepstrum;
+    alert("Jag fungerar inte än! Du får köra vanlig");
+}
+
+
+/* TABORT
 function draw( time ) {
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
