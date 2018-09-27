@@ -8,9 +8,9 @@ var frequencyArray = null;
 //ljudvariabler
 var fvalue = 0;
 var i= 0;
-var size = 1024;
+var size = 2048;
 var sampelrate = 44100;
-var threshold = 200;
+var threshold = 100;
 var soundActive = false;
 var fchoice = vanlig;
 
@@ -53,12 +53,10 @@ function startAudio() {
         alert('getUserMedia gav ett exception :' + e);
     }
 }
-
 //Görs om man inte har hittat en ljudkälla
 function streamNotFind() {
     alert('Det gick inte att hitta en ljudkälla.');
 }
-
 //Görs om man har hittat en ljudkälla
 function streamFind(stream) {
     soundActive = true;
@@ -74,44 +72,18 @@ function streamFind(stream) {
     // kick off the visual updating
     draw();
 }
-
 //Skapar en analys node så man kan få fram frekvenserna
 function createFrequencyAnalyser(){
     analyser = audioContext.createAnalyser();
-    analyser.fftSize = 1024;
+    analyser.fftSize = size;
     //create arrays
     dataArray = new Uint8Array(analyser.frequencyBinCount);
     frequencyArray = new Float32Array(analyser.frequencyBinCount);
     //Create a array with the frequencyintervallt
     for(var i=0; i <= frequencyArray.length; i++){
-        frequencyArray[i] = i*sampelrate/size;
+        frequencyArray[i] = i*sampelrate/(size);
     }
 }
-
-function getFrequency(){
-    if(fchoice==vanlig) return getFrequencyVanligt();
-    else if (fchoice == autokorrelation) return getFrequencyAuto();
-    else if (fchoice == HPS) return getFrequencyHPS();
-    else if (fchoice == cepstrum) return getFrequencyCepstrum();
-}
-//Hämtar frekvensen genom att hitta det starkasteintevallet
-function getFrequencyVanligt(){
-    analyser.getByteFrequencyData(dataArray);
-    fvalue = Math.max.apply( this, dataArray );
-    //TODO skriv om
-    if((fvalue != -Infinity) && (fvalue > threshold)){
-        i = dataArray.findIndex(function (element){
-            return element == fvalue;
-        });}    
-    test.innerHTML = "Start: " + fvalue +" something"+ i+ "Frequency"+ frequencyArray[i]+ " japp de var allt";
-     frequencyArray.forEach(function(element){
-       test.innerHTML += Math.round(element)+ ", ";});
-    return frequencyArray[i];
-}
-function getFrequencyCepstrum(){getFrequencyVanligt();}
-function getFrequencyHPS(){getFrequencyVanligt();}
-function getFrequencyAuto(){getFrequencyVanligt();}
-
 //Stänger av ljudkällan
 function stopAudio(){
     soundActive = false;
@@ -121,6 +93,30 @@ function stopAudio(){
         alert('Ljudkällan är inte äns på!!!');
     }  
 }
+
+
+//Hämtar frekvensen
+function getFrequency(){
+    if(fchoice==vanlig) return getFrequencyVanligt();
+    else if (fchoice == autokorrelation) return getFrequencyAuto();
+    else if (fchoice == HPS) return getFrequencyHPS();
+    else if (fchoice == cepstrum) return getFrequencyCepstrum();
+}
+function getFrequencyVanligt(){
+    analyser.getByteFrequencyData(dataArray);
+    fvalue = Math.max.apply( this, dataArray );
+    //TODO skriv om
+    if((fvalue != -Infinity) && (fvalue > threshold)){
+        i = dataArray.findIndex(function (element){
+            return element == fvalue;
+        });}    
+    test.innerHTML = "Start: " + fvalue +" something"+ i+ "Frequency"+ frequencyArray[i]+ " japp"+ frequencyArray.length +"hej"+ dataArray.length +"de var allt";
+    
+    return frequencyArray[i];
+}
+function getFrequencyCepstrum(){getFrequencyVanligt();}
+function getFrequencyHPS(){getFrequencyVanligt();}
+function getFrequencyAuto(){getFrequencyVanligt();}
 
 //Functioner beroende på hur man vill hämta frekvensen
 function vanlig(){

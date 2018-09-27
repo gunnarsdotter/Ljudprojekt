@@ -21,11 +21,12 @@ imageballoon.src = "balloon.png";
 var dx = 2;
 var dy = -2;
 var rafID = null;
+var f = 0;
 
 //Ritar bakgrund. HAMNAR OVANFÖR BALLONGJÄVELN
 	imageBack.onload = function()
 	{
-		ctx2.drawImage(imageBack, 0, 0, 1920, 720);
+		ctx2.drawImage(imageBack, 0, 0, 1275, 610);
 	};
   imageBack.src = 'cute.gif';
 
@@ -51,7 +52,12 @@ function draw() {
     
     //Ska kopplas till hur ljudet kommer in. 
     if(soundActive){
-        y = getFrequency()/5; 
+        f = getFrequency();
+        y = 610+1*Math.pow(10,-4)*Math.pow(f, 2) - 0.5064*f + 4*Math.pow(10, -12) ; 
+        //y = 610+4*Math.pow(10,-5)*Math.pow(f, 2) - 0.3558*f + 135.71 ; 
+        test.innerHTML += " y"+ y; 
+        if(y > 400) y= 400;
+        if(y <0)y = 0;
     }
     
     // set up the next visual callback
