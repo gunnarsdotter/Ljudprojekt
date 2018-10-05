@@ -12,7 +12,11 @@ var fvalue = 0;
 var i= 0;
 var size = 2048;
 var sampelrate = 44100;
+<<<<<<< HEAD
 var threshold = 100;
+=======
+var threshold = 200;
+>>>>>>> a6490d7... ojda jag raka sabba min branch
 var soundActive = false;
 var fchoice;
 
@@ -139,10 +143,16 @@ function getFrequencyHPS(){
 function getFrequencyAuto(){    
 		test.innerHTML = "auto";
     analyser.getByteTimeDomainData(dataArray);
+<<<<<<< HEAD
 		test.innerHTML += " DataArray " + dataArray.length;
     var fauto = autokorrelationFinder();
 	  test.innerHTML += " " + fauto;
 		if (fauto !== -1) {
+=======
+    var fauto = autokorrelationFinder();
+		test.innerHTML +=  "f auto " +fauto;
+		if (fauto !== -1 && fauto !== 5512.5) {
+>>>>>>> a6490d7... ojda jag raka sabba min branch
 				return fauto;
     }
 		else{
@@ -162,11 +172,19 @@ function autokorrelationFinder() {
 	for(var k = 8; k <= 1000; k++){
 		var sum = 0;
 		
+<<<<<<< HEAD
 		for(var i = 0; i < dataArray.length; i++){
 			sum += ((dataArray[i] - 128) / 128) * ((dataArray[i + k] - 128) / 128);
 		}
 		
 		var r = sum / (dataArray.length + k);
+=======
+		for(var i = 0; i < dataArray.length-k; i++){
+			sum += ((dataArray[i] - 128) / 128) * ((dataArray[i + k] - 128) / 128);
+		}
+		var r = sum / (dataArray.length + k);
+	
+>>>>>>> a6490d7... ojda jag raka sabba min branch
 		if(r > bestR){
 			bestR = r;
 			bestK = k;
@@ -177,7 +195,10 @@ function autokorrelationFinder() {
 			break;
 		}
 	}
+<<<<<<< HEAD
 	test.innerHTML += " bestR " + bestR + " f  "+ (sampelrate/bestK);
+=======
+>>>>>>> a6490d7... ojda jag raka sabba min branch
 	if(bestR > 0.0025) {
 		// The period (in frames) of the fundamental frequency is 'bestK'. Getting the frequency from there is trivial.
 		var fundamentalFreq = sampelrate / bestK;
