@@ -6,21 +6,45 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Någon fin title! </title>
         <meta name="description" content="En interaktiv genomgång av Brackets.">
-        <link rel="stylesheet" href="main.css">
+        <link rel="stylesheet" type="text/css" href="style.css">
 		<style>
 			*{ padding: 0; margin: 0; }
-			canvas {background: #eee; display: block; margin: 0 auto; }
+			#myCanvas {
+			display: block; 
+			margin: 0 auto;
+			}
+			
+			#myCanvas2 {
+			background: url("Mountain.svg") repeat-x;
+			display: block; 
+			margin: 0 auto;
+			animation: slide 45s linear infinite;
+			}
 
 		</style>
     </head>
     <body>
-        <button onclick="startAudio()"> Tryck på mig! </button>
-        <script	src="soundFunctions.js"> </script>
-		<canvas id="myCanvas" width="1920" height="720"  style = "position: absolute; z-index: 1 "></canvas>
-		<canvas id="myCanvas2" width="1920" height="720" style = "position: absolute; z-index: 0 "></canvas>
-		<script src="Game.js">
+      
+	   
+        <button  onclick="autokorrelation()"> Autokorrelation </button>
+        <button  onclick="HPS()"> HPS </button>
+        <button  onclick="cepstrum()">cepstrum</button>
+		<p id="test" > hej </p>
 		
-		</script>
+		 <div class ="slidecontainer">
+			<input type = "range" min = "100" max = "400" value = "250" class = "slider" id = "myRange">
+		</div>
+		<div id = "imgWrapper" >
+		<img id = "WelcomeImg"  src = "LollaBalloona.png" >
+		<button id = "startbutt" onclick="vanlig()"/button>		
+		</div> 
+		<canvas id="myCanvas" width="5076" height="610"  style = "position: absolute; z-index: 1 "></canvas>
+		<canvas id="myCanvas2" width="5076" height="610"  style = "position: absolute; z-index: 0 "></canvas>
 
-    </body>
+		
+		<script	src="soundFunctions.js"> </script>
+		<script src="game.js"> 
+		</script>
+		</body>
 </html>
+	

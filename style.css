@@ -1,0 +1,104 @@
+.wrapper {
+  overflow: hidden;
+
+}
+
+
+
+#imgWrapper{
+	
+	position: absolute;
+	z-index: 2;
+	height: 100%;
+	width: 100%;
+}
+
+#WelcomeImg{
+	
+  height: 350px;
+  width: 350px;  
+  margin-left: 40%;
+  
+}
+
+#startbutt {
+	
+	height: 60px;
+	width: 350px; 
+	margin-left: 60%;
+	background: url(startbutt.png);
+	background-size: 100%;
+	background-repeat: no-repeat;
+	
+}
+
+#startbutt:hover{
+  
+    background: url(start_hover.png);
+    background-size: 100%;
+    background-repeat: no-repeat; 
+        
+}
+
+
+.sliding-background {
+  background: url("Mountain.svg") repeat-x;
+  height: 560px;
+  width: 5076px;
+  animation: slide 20s linear infinite;
+  z-index: -1;
+}
+
+@keyframes slide{
+  0%{
+    transform: translate3d(0, 0, 0);
+  }
+  100%{
+    transform: translate3d(-1692px, 0, 0);
+  }
+}
+
+
+.slidecontainer {
+	
+	width: 100%;
+	
+}
+
+.slider {
+	
+	-webkit-appearance: none;  
+    appearance: none;
+    width: 100%; 
+    height: 15px; 
+	border-radius: 5px;
+    background: #d3d3d3; 
+    outline: none; 
+    opacity: 0.7; 
+    -webkit-transition: .2s; 
+    transition: opacity .2s;	
+}
+
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
+
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+	border-radius: 50%;
+    background: #4CAF50; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
+
+.slider::-moz-range-thumb {
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+	border-radius: 50%;
+    background: #4CAF50; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}

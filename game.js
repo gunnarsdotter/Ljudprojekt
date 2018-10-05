@@ -5,61 +5,91 @@ var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
 
 
-//Canvas2
-var Canvas2 = document.getElementById("myCanvas2");
-var ctx2 = canvas.getContext("2d");
-var imageBack = new Image();
-var xb = Canvas2.width;
-var yb = Canvas2.height;
-
 //Variabler för ballong
-var x = canvas.width/9;
+var x = canvas.width/40;
 var y = canvas.height-181;
 var imageballoon = new Image();
 imageballoon.src = "balloon.png";
 
+//Variabler för fiender
+var enemies = new Image();
+enemies.src = "cat.png"
+var xe = canvas.width/3.3;
+var ye = canvas.height-181;
+var dye = -2;
+
+
 //Variabel som ska vara beroende av ljudet. 
-var dx = 2;
+var dx = 8;
 var dy = -2;
-
-//Ritar bakgrund. HAMNAR OVANFÖR BALLONGJÄVELN
-	imageBack.onload = function()
-	{
-		ctx2.drawImage(imageBack, 0, 0, 1920, 720);
-	};
-  imageBack.src = 'cute.gif';
-
-
+var rafID = null;
+var f = 0;
 
 //Ritar bilden. 
 function flyingballoon() {
-	
 
 	ctx.beginPath();
 	ctx.drawImage(imageballoon, x, y, 140, 200);
     ctx.closePath();
+}
 
+function renderEnemy() {
 
+	ctx.drawImage(enemies, xe, ye, 120, 120);
+	
+}
+
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
 //Uppdaterar bilden. 
 function draw() {
-
+	
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx2.clearRect(0, 0, canvas.width, canvas.height);
-	imageBack.onload();
     flyingballoon();
-
+	
+	//Kontrollerar ballongens höjd
 	if(y +dy > canvas.height-180  || y + dy < 1) {
         dy = -dy;
     }
- 
- //Ska kopplas till hur ljudet kommer in. 
-   y += dy;
-   
-   
-   
+	
+		
+	//Kollision
+	if(x < xe + 120 && 
+		x + 120 > xe && 
+		y < ye + 140 &&
+		200 + y > ye ) {
+			
+		alert('Du dog');
+			
+		}
+		
+	
+	
+	//Ljudet kommer in och ballongen ändrar position.  
+	if(soundActive){
+		f = getFrequency();
+		y = 610+1*Math.pow(10,-4)*Math.pow(f, 2) - 0.5064*f + 4*Math.pow(10, -12) ; 
+		//y = 610+4*Math.pow(10,-5)*Math.pow(f, 2) - 0.3558*f + 135.71 ; 
+		test.innerHTML += " y"+ y; 
+        
+		if(y > 400) y= 400;
+        if(y <0)y = 0;
+    }
+    
+	
 
+	//Fienden
+	xe = xe - dx;
+	renderEnemy();
+	
+	if(xe < 0 )
+	{
+		xe = 2000;
+		ye = getRndInteger(250, 600);
+	}
+
+	rafID = window.requestAnimationFrame( draw );
 }
-//Intervall i hur ofta bilden ska uppdateras. 
-setInterval(draw, 10);
+
