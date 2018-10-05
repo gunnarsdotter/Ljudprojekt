@@ -13,7 +13,7 @@ imageballoon.src = "balloon.png";
 
 //Variabler för fiender
 var enemies = new Image();
-enemies.src = "cat.png"
+enemies.src = "cloud.png"
 var xe = canvas.width/3.3;
 var ye = canvas.height-181;
 var dye = -2;

@@ -20,6 +20,15 @@ function startGame() {
 		fchoice = "vanlig";
 		threshold = 100;
 		startAudio();
+		
+	var startbutt = document.getElementById("wrapperstart");
+	if(startbutt.display === "none"){
+		startbutt.style.display = "block";
+	} else {
+		
+		startbutt.style.display = "none";
+	} 
+	
 }
 function endGame(){
 		stopAudio();
@@ -29,6 +38,7 @@ function endGame(){
 var slider = document.getElementById("myRange");
 slider.oninput = function() {
 	threshold = this.value;
+	document.getElementById("Tvalue").innerHTML = threshold;
 }
 
 //Försöker starta ljudet
