@@ -20,6 +20,13 @@ function startGame() {
     test = document.getElementById( "test" );
 }
 
+var slider = document.getElementById("myRange");
+
+slider.oninput = function() {
+	
+	threshold = this.value;
+}
+
 //Försöker starta ljudet
 function startAudio() {	
     // monkeypatch Web Audio
