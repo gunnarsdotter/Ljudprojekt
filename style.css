@@ -1,3 +1,7 @@
+body{
+	overflow-x: hidden;
+}
+
 .wrapper {
   overflow: hidden;
 
@@ -31,15 +35,11 @@
     transform: translate3d(-1692px, 0, 0);
   }
 }
-
-
 .slidecontainer {
-	
 	width: 100%;
 }
 
 .slider {
-	
 	-webkit-appearance: none;  
     appearance: none;
     width: 100%; 
