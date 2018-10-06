@@ -20,7 +20,7 @@ var dye = -2;
 
 
 //Variabel som ska vara beroende av ljudet. 
-var dx = 2;
+var dx = 8;
 var dy = -2;
 var rafID = null;
 var f = 0;
@@ -39,17 +39,32 @@ function renderEnemy() {
 	
 }
 
+function getRndInteger(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
 //Uppdaterar bilden. 
 function draw() {
 	
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
     flyingballoon();
-	renderEnemy();
-
- 
+	
+	//Kontrollerar ballongens höjd
 	if(y +dy > canvas.height-180  || y + dy < 1) {
         dy = -dy;
     }
+	
+		
+	//Kollision
+	if(x < xe + 120 && 
+		x + 120 > xe && 
+		y < ye + 140 &&
+		200 + y > ye ) {
+			
+		alert('Du dog');
+			
+		}
+		
 	
 	
 	//Ljudet kommer in och ballongen ändrar position.  
@@ -67,12 +82,14 @@ function draw() {
 
 	//Fienden
 	xe = xe - dx;
+	renderEnemy();
 	
-	
+	if(xe < 0 )
+	{
+		xe = 2000;
+		ye = getRndInteger(250, 600);
+	}
+
 	rafID = window.requestAnimationFrame( draw );
-
-
 }
-//Intervall i hur ofta bilden ska uppdateras. 
-//setInterval(draw, 10);
 
