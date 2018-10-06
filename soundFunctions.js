@@ -5,6 +5,8 @@ var analyser = null;
 //arrayer
 var dataArray =null;
 var frequencyArray = null;
+var halfArray = null;
+var therdArray = null;
 //ljudvariabler
 var fvalue = 0;
 var i= 0;
@@ -12,7 +14,7 @@ var size = 2048;
 var sampelrate = 44100;
 var threshold = 100;
 var soundActive = false;
-var fchoice = vanlig;
+var fchoice;
 
 var test; //TABORT
 //TABORT!!
@@ -68,7 +70,7 @@ function streamFind(stream) {
     //Set up audio node network
     mediaStreamSource.connect(analyser);
     //analyser.connect(audioContext.destination); //if this is active then the sound will go to the speakers.
-    
+    fchoice = "autokorrelation";
     // kick off the visual updating
     draw();
 }
@@ -95,70 +97,110 @@ function stopAudio(){
 }
 
 
-//Hämtar frekvensen
+//---------------------------------Hämtar frekvensen--------------------------
 function getFrequency(){
-    if(fchoice==vanlig) return getFrequencyVanligt();
-    else if (fchoice == autokorrelation) return getFrequencyAuto();
-    else if (fchoice == HPS) return getFrequencyHPS();
-    else if (fchoice == cepstrum) return getFrequencyCepstrum();
+    if(fchoice == "vanlig"){
+				return getFrequencyVanligt();
+		}
+		else if (fchoice == "autokorrelation") {
+				return getFrequencyAuto();
+		}
+    else if (fchoice == "HPS"){
+				return getFrequencyHPS();	
+		} 
+    else if (fchoice == "cepstrum"){
+				return getFrequencyCepstrum();
+		}
 }
+
 function getFrequencyVanligt(){
+		test.innerHTML = "vanlig";
     analyser.getByteFrequencyData(dataArray);
     fvalue = Math.max.apply( this, dataArray );
-    //TODO skriv om
     if((fvalue != -Infinity) && (fvalue > threshold)){
         i = dataArray.findIndex(function (element){
             return element == fvalue;
-        });}    
-    test.innerHTML = "Start: " + fvalue +" something"+ i+ "Frequency"+ frequencyArray[i]+ " japp"+ frequencyArray.length +"hej"+ dataArray.length +"de var allt";
-    
+        });}        
     return frequencyArray[i];
 }
+//TODO
 function getFrequencyCepstrum(){getFrequencyVanligt();}
-function getFrequencyHPS(){getFrequencyVanligt();}
-function getFrequencyAuto(){getFrequencyVanligt();}
+//TODO
+function getFrequencyHPS(){
+    analyser.getByteFrequencyData(dataArray);
+    j=0;
+    for (i = 0; i < dataArray.length; i++) { 
+        if(i%2 == 0){j++;}
+        if(i%3 ==0){k++;}
+        halfArray[j] += dataArray[i];
+        therdArray[k] += dataArray[i];
+    }
+}
+function getFrequencyAuto(){    
+		test.innerHTML = "auto";
+    analyser.getByteTimeDomainData(dataArray);
+		test.innerHTML += " DataArray " + dataArray.length;
+    var fauto = autokorrelationFinder();
+	  test.innerHTML += " " + fauto;
+		if (fauto !== -1) {
+				return fauto;
+    }
+		else{
+				return f;
+		}
+}
+function autokorrelationFinder() {
+	// We use Autocorrelation to find the fundamental frequency.
+	
+	// In order to correlate the signal with itself (hence the name of the algorithm), we will check two points 'k' frames away. 
+	// The autocorrelation index will be the average of these products. At the same time, we normalize the values.
+	// Source: http://www.phy.mty.edu/~suits/autocorrelation.html
+	// Assuming the sample rate is 48000Hz, a 'k' equal to 1000 would correspond to a 48Hz signal (48000/1000 = 48), 
+	// while a 'k' equal to 8 would correspond to a 6000Hz one, which is enough to cover most (if not all) 
+	// the notes we have in the notes.json file.
+	var bestR = 0, bestK = -1;
+	for(var k = 8; k <= 1000; k++){
+		var sum = 0;
+		
+		for(var i = 0; i < dataArray.length; i++){
+			sum += ((dataArray[i] - 128) / 128) * ((dataArray[i + k] - 128) / 128);
+		}
+		
+		var r = sum / (dataArray.length + k);
+		if(r > bestR){
+			bestR = r;
+			bestK = k;
+		}
+	
+		if(r > 0.9) {
+			// Let's assume that this is good enough and stop right here
+			break;
+		}
+	}
+	test.innerHTML += " bestR " + bestR + " f  "+ (sampelrate/bestK);
+	if(bestR > 0.0025) {
+		// The period (in frames) of the fundamental frequency is 'bestK'. Getting the frequency from there is trivial.
+		var fundamentalFreq = sampelrate / bestK;
+		return fundamentalFreq;
+	}
+	else {
+		// We haven't found a good correlation
+		return -1;
+	}
+};
 
-//Functioner beroende på hur man vill hämta frekvensen
+//--------------------------------Functioner beroende på hur man vill hämta frekvensen-------------------
+function gsp(){startAudio();}
 function vanlig(){
-    fchoice = vanlig;
-    startAudio();
+    fchoice = "vanlig";
 }
-function autokorrelation(){ fchoice = autokorrelation;
+function autokorrelation(){ 
+		fchoice = "autokorrelation";
+}
+function HPS(){ fchoice = "HPS";
     alert("Jag fungerar inte än! Du får köra vanlig");
 }
-function HPS(){ fchoice =HPS;
-    alert("Jag fungerar inte än! Du får köra vanlig");
-}
-function cepstrum(){ fchoice = cepstrum;
+function cepstrum(){ fchoice = "cepstrum";
     alert("Jag fungerar inte än! Du får köra vanlig");
 }
 
-
-/* TABORT
-function draw( time ) {
-    
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx2.clearRect(0, 0, canvas.width, canvas.height);
-	imageBack.onload();
-    
-    
-   test.innerHTML = "Start: " + fvalue +" something"+ i+ "Frequency"+ frequencyArray[i]+ " japp de var allt";
-    frequencyArray.forEach(function(element){
-       test.innerHTML += Math.round(element)+ ", ";});
-    
-    if (frequencyArray[i] >200 && frequencyArray[i] < 400){y = }
-    else if(frequencyArray[i] >400 && frequencyArray[i] < 600){y = }
-    else if(frequencyArray[i] >600 && frequencyArray[i] < 800) {y =}
-    else if(frequencyArray[i] >800 && frequencyArray[i] < 1000){y = }
-    else if(frequencyArray[i] >1000 && frequencyArray[i] < 1200) {y =}
-    else if(frequencyArray[i] >1200 && frequencyArray[i] < 1500) {y =}
-    else if(frequencyArray[i] > 15000){y = }
-    else if(frequencyArray[i] < 200) {y = }
-                                       
-    //Ska kopplas till hur ljudet kommer in. 
-    y = getFrequency();
-
-    // set up the next visual callback
-    rafID = window.requestAnimationFrame( draw );
-        
-}*/

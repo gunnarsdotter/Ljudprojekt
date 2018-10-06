@@ -38,31 +38,31 @@ function flyingballoon() {
 	ctx.drawImage(imageballoon, x, y, 140, 200);
     ctx.closePath();
 }
-
+var oldy;
 //Uppdaterar bilden. 
 function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx2.clearRect(0, 0, canvas.width, canvas.height);
 	imageBack.onload();
-    flyingballoon();
     
-	if(y +dy > canvas.height-180  || y + dy < 1) {
-        dy = -dy;
-    }
-    
-    //Ska kopplas till hur ljudet kommer in. 
+	
+    //Ljud 
     if(soundActive){
         f = getFrequency();
+        oldy = y;
         y = 610+1*Math.pow(10,-4)*Math.pow(f, 2) - 0.5064*f + 4*Math.pow(10, -12) ; 
         //y = 610+4*Math.pow(10,-5)*Math.pow(f, 2) - 0.3558*f + 135.71 ; 
-        test.innerHTML += " y"+ y; 
+				
+        test.innerHTML += " f = "+ f; 
+				
         if(y > 400) y= 400;
         if(y <0)y = 0;
+        flyingballoon();
     }
     
     // set up the next visual callback
-    rafID = window.requestAnimationFrame( draw );
+   // rafID = window.requestAnimationFrame( draw );
 }
 
 //Intervall i hur ofta bilden ska uppdateras. 
-//setInterval(draw, 10);
+setInterval(draw, 50);
