@@ -24,14 +24,14 @@
 		</style>
     </head>
     <body>
-       <div class ="slidecontainer">
-				<input type = "range" min = "100" max = "400" value = "250" class = "slider" id = "myRange">
+				<button class="button" onclick="startGame()"> starta</button>
+	    	<button class="button" onclick="vanlig()"> vanlig</button>
+        <button class="button" onclick="autokorrelation()"> Autokorrelation </button>
+        <button class="button" onclick="HPS()"> HPS </button>
+        <button class="button" onclick="cepstrum()">cepstrum</button>
+		<div class ="slidecontainer">
+				<input type = "range" min = "100" max = "400" value = "100" class = "slider" id = "myRange">
 		</div>
-	    <button  onclick="vanlig()"> starta</button>
-        <button  onclick="autokorrelation()"> Autokorrelation </button>
-        <button  onclick="HPS()"> HPS </button>
-        <button  onclick="cepstrum()">cepstrum</button>
-		
       
 		<p id="test" > hej </p>
 		
@@ -40,8 +40,7 @@
 		</canvas>
 		<canvas id="myCanvas2" width="5076" height="610"  style = "position: absolute; z-index: 0 "></canvas>
 		<script	src="soundFunctions.js"> </script>
-		<script src="game.js"> 
-		</script>
+		<script src="game.js"> </script>
 		</body>
 </html>
 	
