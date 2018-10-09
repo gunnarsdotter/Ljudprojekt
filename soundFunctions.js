@@ -11,28 +11,32 @@ var i= 0;
 var size = 2048;
 var sampelrate = 44100;
 var threshold;
+var displayFrequency;
 var soundActive = false;
 var fchoice;
-var test; //TABORT
+var game = false;
 
 function startGame() {
-    test = document.getElementById( "test" );
 		fchoice = "vanlig";
 		threshold = 100;
-		startAudio();
-		
-	var startbutt = document.getElementById("wrapperstart");
-	if(startbutt.display === "none"){
-		startbutt.style.display = "block";
-	} else {
-		
-		startbutt.style.display = "none";
-	} 
-	
+	displayFrequency =document.getElementById("frequency");	
+	displayFrequency.style.visibility = "visible";
+	document.getElementById("wrapperstart").style.visibility = "hidden";
+	document.getElementById("wrapperbutt").style.visibility = "visible";
+	document.getElementById("slider1").style.visibility = "visible";
+	document.getElementById("Tvalue").style.visibility = "visible";	
+	document.getElementById("Tvalue").innerHTML = threshold;
+	game = true;
 }
 function endGame(){
+		game = false;
 		stopAudio();
 		alert('Du dog');
+		displayFrequency.style.visibility = "hidden";
+		document.getElementById("wrapperbutt").style.visibility = "hidden";
+		document.getElementById("slider1").style.visibility = "hidden";
+		document.getElementById("Tvalue").style.visibility = "hidden";	
+		
 }
 
 var slider = document.getElementById("myRange");
@@ -88,7 +92,7 @@ function streamFind(stream) {
     //Set up audio node network
     mediaStreamSource.connect(analyser);
     //analyser.connect(audioContext.destination); //if this is active then the sound will go to the speakers.
-    
+    startGame();
     // kick off the visual updating
     draw();
 }

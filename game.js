@@ -59,7 +59,7 @@ function draw() {
 		y < ye + 140 &&
 		200 + y > ye ) {
 		
-		//endGame();			
+		endGame();			
 		}
 		
 	
@@ -67,6 +67,7 @@ function draw() {
 	//Ljudet kommer in och ballongen ändrar position.  
 	if(soundActive){
 		f = getFrequency();
+		displayFrequency.innerHTML = "Frekvensen: " + Math.round(f) + " Hz";
 		//y = 610+1*Math.pow(10,-4)*Math.pow(f, 2) - 0.5064*f + 4*Math.pow(10, -12) ; 
 		y = 610+4*Math.pow(10,-5)*Math.pow(f, 2) - 0.3558*f - 135.71 ; 
         
@@ -84,7 +85,8 @@ function draw() {
 		xe = 2000;
 		ye = getRndInteger(250, 600);
 	}
-
-	rafID = window.requestAnimationFrame( draw );
+	if(game){
+		rafID = window.requestAnimationFrame( draw );
+	}
 }
 
