@@ -94,7 +94,7 @@ font-family: 'Indie Flower', cursive;
 position: absolute;
 font-size: 40px;
 color: lightblue;
-right: 5.6%;
+right: 6%;
 top: 8%;
 z-index: 3;
 
@@ -108,8 +108,8 @@ color: lightblue;
 right: 5%;
 top: 60%;
 z-index: 3;
-
 }
+
 .slidecontainer {
 	width: 100%;
 }
@@ -118,20 +118,20 @@ z-index: 3;
 }
 .slider {
 		-webkit-appearance: slider-vertical;  
-		writing-mode: vertical-rl;
+		writing-mode: bt-lr;
     appearance: none;
-    width: 15px%; 
+    width: 15px; 
     height: 175px; 
 		border-radius: 5px;
-    background: lightblue;
+    background: lightblue; /* #d3d3d3 */
     position: absolute; 
-    margin-left: 90%;
-    margin-top: 8%;
+    right: 7%;
+    top: 17%;
     z-index:2; 
     outline: none; 
     opacity: 0.7; 
-    -webkit-transition: .2s; 
-    transition: opacity .2s;	
+    -webkit-transition: 0.2s; 
+    transition: opacity 0.2s;	
 }
 
 /* Mouse-over effects */

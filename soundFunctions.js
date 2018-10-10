@@ -1,3 +1,4 @@
+
 //ljudnoder
 var audioContext = null;
 var mediaStreamSource = null;
@@ -5,6 +6,7 @@ var analyser = null;
 //arrayer
 var dataArray =null;
 var frequencyArray = null;
+var cepstrumArray= null;
 //ljudvariabler
 var fvalue = 0;
 var i= 0;
@@ -15,9 +17,8 @@ var displayFrequency;
 var soundActive = false;
 var fchoice;
 var game = false;
-
 function startGame() {
-		fchoice = "vanlig";
+		fchoice = "FFT";
 		threshold = 100;
 	displayFrequency =document.getElementById("frequency");	
 	displayFrequency.style.visibility = "visible";
@@ -103,7 +104,9 @@ function createFrequencyAnalyser(){
     //create arrays
     dataArray = new Uint8Array(analyser.frequencyBinCount);
     frequencyArray = new Float32Array(analyser.frequencyBinCount);
-    //Create a array with the frequencyintervallt
+		cepstrumArray = new Float32Array(analyser.frequencyBinCount);
+		datafloatArray = new Float32Array(analyser.frequencyBinCount);
+		//Create a array with the frequencyintervallt
     for(var i=0; i <= frequencyArray.length; i++){
         frequencyArray[i] = i*sampelrate/(size);
     }
@@ -121,12 +124,12 @@ function stopAudio(){
 
 //Hämtar frekvensen
 function getFrequency(){
-    if(fchoice=="vanlig") return getFrequencyVanligt();
+    if(fchoice=="FFT") return getFrequencyFFT();
     else if (fchoice == "autokorrelation") return getFrequencyAuto();
     else if (fchoice == "HPS") return getFrequencyHPS();
-    else if (fchoice == "cepstrum") return getFrequencyCepstrum();
+    else if (fchoice == "fourier") return getFrequencyFourier();
 }
-function getFrequencyVanligt(){
+function getFrequencyFFT(){
 		analyser.getByteFrequencyData(dataArray);
     fvalue = Math.max.apply( this, dataArray );
     if((fvalue != -Infinity) && (fvalue > threshold)){
@@ -135,8 +138,8 @@ function getFrequencyVanligt(){
         });}        
     return frequencyArray[i];
 }
-function getFrequencyCepstrum(){getFrequencyVanligt();}
-function getFrequencyHPS(){getFrequencyVanligt();}
+
+function getFrequencyHPS(){getFrequencyFFT();}
 function getFrequencyAuto(){
 	analyser.getByteTimeDomainData(dataArray);
 	var fauto = autokorrelationFinder();
@@ -147,7 +150,19 @@ function getFrequencyAuto(){
 				return f;
 		}
 }
-
+function getFrequencyFourier(){
+	analyser.getFloatTimeDomainData(datafloatArray);
+	var fourierArray = fouriertransform(datafloatArray);
+	var fre = Math.max.apply( this, fourierArray);
+	if((fre > 20)){
+        i = fourierArray.findIndex(function (element){
+            return element == fre;
+        });} 
+		if(i > 900){
+			return f;
+		}
+    return i*(sampelrate/fourierArray.length);
+}
 //Extra funktioner freqvens
 function autokorrelationFinder() {
 	// We use Autocorrelation to find the fundamental frequency.
@@ -188,17 +203,78 @@ function autokorrelationFinder() {
 	}
 }
 
+function fouriertransform( in_array ) {
+		var N = in_array.length;
+		var outputArray = [];
+
+		for( var k=0; k < N; k++ ) {
+			var real = 0;
+			var imag = 0;
+			for( var n=0; n < N; n++ ) {
+				real += in_array[n]*Math.cos(-2*Math.PI*k*n/N);
+				imag += in_array[n]*Math.sin(-2*Math.PI*k*n/N);
+			}
+			var x = Math.abs(real) + Math.abs(imag);
+			outputArray.push(x);
+		}
+		return outputArray;
+}
 
 //Functioner beroende på hur man vill hämta frekvensen
-function vanlig(){
-    fchoice = "vanlig";
+function FFT(){
+    fchoice = "FFT";
 }
 function autokorrelation(){ 
 	fchoice = "autokorrelation";
 }
 function HPS(){ fchoice ="HPS";
-    alert("Jag fungerar inte än! Du får köra vanlig");
+    alert("Jag fungerar inte än! Du får köra FFT");
 }
-function cepstrum(){ fchoice = "cepstrum";
-    alert("Jag fungerar inte än! Du får köra vanlig");
+function fourier(){ 
+		fchoice = "fourier";
 }
+
+
+//TABORT
+/*
+function getFrequencyCepstrum(){
+	analyser.getFloatTimeDomainData(datafloatArray);
+	cepstrumArray = cepstrumfinder(datafloatArray);
+	fvalue = Math.max.apply( this, cepstrumArray);
+	test.innerHTML += "fvalue " + fvalue;
+	if(fvalue > 1){
+		return sampelrate/fvalue;
+	}else{
+		return f;
+	}
+}
+
+function cepstrumfinder( in_array ) {
+		var N = in_array.length;
+		var laf = new Array();
+		var outputArray = new Array();
+		var x = 0;
+		for( var k=0; k < N; k++ ) {
+			var real = 0;
+			var imag = 0;
+			for( var n=0; n < N; n++ ) {
+				real += in_array[n]*Math.cos(-2*Math.PI*k*n/N);
+				imag += in_array[n]*Math.sin(-2*Math.PI*k*n/N);
+			}
+			x = Math.log(Math.abs(real) + Math.abs(imag));
+			laf.push(real);
+		}
+		for( var m=0; m < N; m++ ) {
+			var r = 0;
+			var i = 0;
+			for( var j = 0; j < N; j++ ) {
+					r += laf[m]*Math.cos(2*Math.PI*j*m/N);
+					i += laf[m]*Math.sin(2*Math.PI*j*m/N);
+			}
+			x = r/N;
+			outputArray.push(x);
+		}
+		return outputArray;
+}
+
+*/

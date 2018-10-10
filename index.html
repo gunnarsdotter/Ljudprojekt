@@ -5,9 +5,11 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Någon fin title! </title>
-        <meta name="description" content="En interaktiv genomgång av Brackets.">
+        <title>LOLLA-BALLONA </title>
+        <meta name="description" content="Ett Ljudfysiksprojekt där man spelar spel med rösten.">
         <link rel="stylesheet" type="text/css" href="style.css">
+				<link rel="icon" type="image/x-icon" href="favicon.ico" />
+				<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
 		<style>
 			*{ padding: 0; margin: 0; }
 			#myCanvas {
@@ -25,12 +27,11 @@
 		</style>
     </head>
     <body>
-		
 		<div id = "wrapperbutt">
-	    <button class="button" onclick="vanlig()"> vanlig</button>
+	    <button class="button" onclick="FFT()"> FFT</button>
         <button class="button" onclick="autokorrelation()"> Autokorrelation </button>
         <button class="button" onclick="HPS()"> HPS </button>
-        <button class="button" onclick="endGame()">cepstrum</button>
+        <button class="button" onclick="fourier()">Fourier Transform</button>
 		</div>
 		
 		<div id = "wrapperstart" >
