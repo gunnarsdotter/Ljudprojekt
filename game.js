@@ -59,7 +59,7 @@ function draw() {
 		y < ye + 140 &&
 		200 + y > ye ) {
 		
-		//endGame();			
+		endGame();			
 		}
 		
 	
