@@ -6,7 +6,7 @@ var analyser = null;
 //arrayer
 var dataArray =null;
 var frequencyArray = null;
-var cepstrumArray= null;
+var datafloatArray = null;
 //ljudvariabler
 var fvalue = 0;
 var i= 0;
@@ -17,6 +17,7 @@ var displayFrequency;
 var soundActive = false;
 var fchoice;
 var game = false;
+var test;
 function startGame() {
 		fchoice = "FFT";
 		threshold = 100;
@@ -27,6 +28,7 @@ function startGame() {
 	document.getElementById("slider1").style.visibility = "visible";
 	document.getElementById("Tvalue").style.visibility = "visible";	
 	document.getElementById("Tvalue").innerHTML = threshold;
+	test = document.getElementById("test");
 	game = true;
 }
 function endGame(){
@@ -136,10 +138,29 @@ function getFrequencyFFT(){
         i = dataArray.findIndex(function (element){
             return element == fvalue;
         });}        
-    return frequencyArray[i];
+    return frequencyArray[i+1];
 }
 
-function getFrequencyHPS(){getFrequencyFFT();}
+function getFrequencyHPS(){
+	analyser.getFloatFrequencyData(datafloatArray);
+	test.innerHTML = "HPS";
+	var halfArray = downSampel(datafloatArray, 2);
+	var thirdArray = downSampel(datafloatArray, 3);
+	var fourthArray = downSampel(datafloatArray, 4);
+	
+	for(var p= 0; p < datafloatArray.length; p++){
+		if(p < halfArray.length){dataArray[p] += halfArray[p];}
+		if(p < thirdArray.length){dataArray[p] += thirdArray[p];}
+		if(p < fourthArray.length){dataArray[p] += fourthArray[p];}
+	}
+	
+	fvalue = Math.max.apply( this, datafloatArray );
+  p = datafloatArray.findIndex(function (element){
+            return element == fvalue;
+        });        
+	return  (p+1)*(sampelrate/(datafloatArray.length*2));
+}
+
 function getFrequencyAuto(){
 	analyser.getByteTimeDomainData(dataArray);
 	var fauto = autokorrelationFinder();
@@ -154,15 +175,17 @@ function getFrequencyFourier(){
 	analyser.getFloatTimeDomainData(datafloatArray);
 	var fourierArray = fouriertransform(datafloatArray);
 	var fre = Math.max.apply( this, fourierArray);
-	if((fre > 20)){
+	if(fre+100 > threshold){
         i = fourierArray.findIndex(function (element){
             return element == fre;
-        });} 
+        });}        
+	
 		if(i > 900){
 			return f;
 		}
     return i*(sampelrate/fourierArray.length);
 }
+
 //Extra funktioner freqvens
 function autokorrelationFinder() {
 	// We use Autocorrelation to find the fundamental frequency.
@@ -202,7 +225,6 @@ function autokorrelationFinder() {
 		return -1;
 	}
 }
-
 function fouriertransform( in_array ) {
 		var N = in_array.length;
 		var outputArray = [];
@@ -219,19 +241,40 @@ function fouriertransform( in_array ) {
 		}
 		return outputArray;
 }
+function downSampel(inArray, number){
+	var outputArray = [];
+	var i = 0;
+	while(i < inArray.length- number){
+		var sampel = 0;
+		for(var j = 0; j < number; j++){
+			sampel += inArray[j+i];
+		}
+		outputArray.push(sampel/2);
+		i += number;
+	}
+	return outputArray;
+}
 
 //Functioner beroende på hur man vill hämta frekvensen
 function FFT(){
     fchoice = "FFT";
+		document.getElementById("slider1").style.visibility = "visible";
+		document.getElementById("Tvalue").style.visibility = "visible";	
 }
 function autokorrelation(){ 
 	fchoice = "autokorrelation";
+	document.getElementById("slider1").style.visibility = "hidden";
+		document.getElementById("Tvalue").style.visibility = "hidden";	
 }
-function HPS(){ fchoice ="HPS";
-    alert("Jag fungerar inte än! Du får köra FFT");
+function HPS(){ 
+	fchoice ="HPS";
+	document.getElementById("slider1").style.visibility = "hidden";
+	document.getElementById("Tvalue").style.visibility = "hidden";	
 }
 function fourier(){ 
 		fchoice = "fourier";
+		document.getElementById("slider1").style.visibility = "visible";
+		document.getElementById("Tvalue").style.visibility = "visible";	
 }
 
 
