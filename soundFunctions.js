@@ -17,7 +17,7 @@ var displayFrequency;
 var soundActive = false;
 var fchoice;
 var game = false;
-var test;
+
 function startGame() {
 		fchoice = "FFT";
 		threshold = 100;
@@ -28,7 +28,6 @@ function startGame() {
 	document.getElementById("slider1").style.visibility = "visible";
 	document.getElementById("Tvalue").style.visibility = "visible";	
 	document.getElementById("Tvalue").innerHTML = threshold;
-	test = document.getElementById("test");
 	game = true;
 }
 function endGame(){
@@ -143,7 +142,6 @@ function getFrequencyFFT(){
 
 function getFrequencyHPS(){
 	analyser.getFloatFrequencyData(datafloatArray);
-	test.innerHTML = "HPS";
 	var halfArray = downSampel(datafloatArray, 2);
 	var thirdArray = downSampel(datafloatArray, 3);
 	var fourthArray = downSampel(datafloatArray, 4);
@@ -155,10 +153,13 @@ function getFrequencyHPS(){
 	}
 	
 	fvalue = Math.max.apply( this, datafloatArray );
-  p = datafloatArray.findIndex(function (element){
+	if(fvalue > (threshold-150)){
+			p = datafloatArray.findIndex(function (element){
             return element == fvalue;
         });        
-	return  (p+1)*(sampelrate/(datafloatArray.length*2));
+		return  (p+1)*(sampelrate/(datafloatArray.length*2));
+	}
+	return f;
 }
 
 function getFrequencyAuto(){
@@ -183,7 +184,7 @@ function getFrequencyFourier(){
 		if(i > 900){
 			return f;
 		}
-    return i*(sampelrate/fourierArray.length);
+    return (i+1)*(sampelrate/fourierArray.length);
 }
 
 //Extra funktioner freqvens
@@ -268,8 +269,8 @@ function autokorrelation(){
 }
 function HPS(){ 
 	fchoice ="HPS";
-	document.getElementById("slider1").style.visibility = "hidden";
-	document.getElementById("Tvalue").style.visibility = "hidden";	
+	document.getElementById("slider1").style.visibility = "visible";
+	document.getElementById("Tvalue").style.visibility = "visible";	
 }
 function fourier(){ 
 		fchoice = "fourier";
