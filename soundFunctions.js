@@ -10,7 +10,7 @@ var datafloatArray = null;
 //ljudvariabler
 var fvalue = 0;
 var i= 0;
-var size = 2048;
+var size = 2048; 
 var sampelrate = 44100;
 var threshold;
 var displayFrequency;
@@ -38,6 +38,8 @@ function endGame(){
 		document.getElementById("wrapperbutt").style.visibility = "hidden";
 		document.getElementById("slider1").style.visibility = "hidden";
 		document.getElementById("Tvalue").style.visibility = "hidden";	
+		document.getElementById("start").style.visibility = "visible";
+		document.getElementById("start").innerHTML = "Spela igen";
 		
 }
 
@@ -242,8 +244,9 @@ function fouriertransform( in_array ) {
 		}
 		return outputArray;
 }
+var outputArray;
 function downSampel(inArray, number){
-	var outputArray = [];
+	outputArray = [];
 	var i = 0;
 	while(i < inArray.length- number){
 		var sampel = 0;
